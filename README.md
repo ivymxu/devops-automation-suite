@@ -32,10 +32,24 @@ DevOps-Automation-Suite/
 ├── policies/          # OPA policies (security, compliance)
 ├── ci-cd/             # Pipeline templates (GitHub Actions, GitLab, Jenkins)
 ├── docs/              # Architecture diagrams, usage docs
+├── demo-app/
 └── README.md
 ```
 
-👉 Example microservice: [wip]
+## 🧪 Demo Application
+
+This repository includes a sample microservice (`/demo-app`) used to showcase the DevOps Automation Suite in action.
+Features:
+- Simple Flask API with Dockerfile and Helm chart.
+- Kubernetes manifests for deployment.
+- Integrated into CI/CD workflows for:
+  - Ephemeral environment provisioning.
+  - Policy-as-code enforcement.
+  - Multi-cloud Terraform deployments.
+
+### Demo:
+
+
 
 ## 🎯 Why does this project matter?
 - Demonstrates enterprise-grade DevOps practices (policy enforcement, GitOps, IaC)
