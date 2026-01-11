@@ -1,0 +1,38 @@
+name: Teardown Ephemeral Environment
+
+on:
+  pull_request:
+    types: [closed]
+    branches: [main]
+
+env:
+  ENVIRONMENT_NAME: pr-${{ github.event.pull_request.number }}
+
+jobs:
+  teardown:
+    name: Teardown Environment
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Teardown environment
+        run: |
+          python cli/deploy.py teardown \
+            --env-name ${{ env.ENVIRONMENT_NAME }}
+
+      - name: Comment PR
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: '🗑️ Environment ${{ env.ENVIRONMENT_NAME }} has been cleaned up!'
+            })

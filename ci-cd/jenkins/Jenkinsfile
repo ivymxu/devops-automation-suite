@@ -1,0 +1,61 @@
+pipeline {
+    agent any
+    
+    environment {
+        ENVIRONMENT_NAME = "pr-${env.CHANGE_ID}"
+    }
+    
+    stages {
+        stage('Policy Validation') {
+            steps {
+                script {
+                    docker.image('openpolicyagent/conftest:latest').inside {
+                        sh 'conftest test demo-app/kubernetes/*.yaml -p policies/'
+                    }
+                }
+            }
+        }
+        
+        stage('Deploy Ephemeral Environment') {
+            when {
+                changeRequest()
+            }
+            steps {
+                script {
+                    docker.image('python:3.11-slim').inside {
+                        sh """
+                            python cli/deploy.py deploy \
+                                --env-name ${ENVIRONMENT_NAME} \
+                                --provider aws
+                        """
+                    }
+                }
+            }
+        }
+        
+        stage('Teardown on PR Close') {
+            when {
+                changeRequest target: 'main', comparator: 'REGEXP'
+            }
+            steps {
+                script {
+                    docker.image('python:3.11-slim').inside {
+                        sh """
+                            python cli/deploy.py teardown \
+                                --env-name ${ENVIRONMENT_NAME}
+                        """
+                    }
+                }
+            }
+        }
+    }
+    
+    post {
+        success {
+            echo "Preview URL: https://${ENVIRONMENT_NAME}.preview.example.com"
+        }
+        failure {
+            echo "Deployment failed!"
+        }
+    }
+}
