@@ -14,6 +14,12 @@ variable "region" {
   default     = "us-central1"
 }
 
+variable "enable_binary_authorization" {
+  description = "Enable binary authorization for the cluster"
+  type        = bool
+  default     = false
+}
+
 variable "node_machine_type" {
   description = "Machine type for worker nodes"
   type        = string

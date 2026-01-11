@@ -9,6 +9,12 @@ variable "region" {
   default     = "us-west-2"
 }
 
+variable "kubernetes_version" {
+  description = "Kubernetes version"
+  type        = string
+  default     = "1.28"
+}
+
 variable "node_instance_type" {
   description = "EC2 instance type for worker nodes"
   type        = string

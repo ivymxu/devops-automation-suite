@@ -17,6 +17,7 @@ deny[msg] {
 deny[msg] {
     input.request.kind.kind == "Pod"
     container := input.request.object.spec.containers[_]
+    container.resources.requests
     not container.resources.requests.memory
     msg := sprintf("Container '%s' must define memory request", [container.name])
 }
@@ -24,6 +25,7 @@ deny[msg] {
 deny[msg] {
     input.request.kind.kind == "Pod"
     container := input.request.object.spec.containers[_]
+    container.resources.requests
     not container.resources.requests.cpu
     msg := sprintf("Container '%s' must define CPU request", [container.name])
 }
