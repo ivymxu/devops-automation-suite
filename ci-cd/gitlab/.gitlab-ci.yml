@@ -1,0 +1,36 @@
+stages:
+  - validate
+  - deploy
+  - teardown
+
+variables:
+  ENVIRONMENT_NAME: "pr-${CI_MERGE_REQUEST_IID}"
+
+validate:policy:
+  stage: validate
+  image: openpolicyagent/conftest:latest
+  script:
+    - conftest test demo-app/kubernetes/*.yaml -p policies/
+  only:
+    - merge_requests
+
+deploy:ephemeral:
+  stage: deploy
+  image: python:3.11-slim
+  script:
+    - python cli/deploy.py deploy --env-name ${ENVIRONMENT_NAME} --provider aws
+    - echo "Preview URL https://${ENVIRONMENT_NAME}.preview.example.com"
+  only:
+    - merge_requests
+  needs:
+    - validate:policy
+
+teardown:ephemeral:
+  stage: teardown
+  image: python:3.11-slim
+  script:
+    - python cli/deploy.py teardown --env-name ${ENVIRONMENT_NAME}
+  only:
+    - merge_requests
+  when: manual
+  allow_failure: true

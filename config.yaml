@@ -1,0 +1,62 @@
+# Example configuration for DevOps Automation Suite
+
+# Cloud provider selection
+provider: aws  # Options: aws, gcp, azure
+
+# Environment configuration
+environment:
+  name: "ephemeral-env"
+  namespace: "default"
+  
+# Application settings
+application:
+  name: "demo-app"
+  replicas: 2
+  image:
+    repository: "demo-app"
+    tag: "latest"
+  
+# Resource configuration
+resources:
+  requests:
+    memory: "128Mi"
+    cpu: "100m"
+  limits:
+    memory: "256Mi"
+    cpu: "200m"
+
+# Cloud-specific settings
+aws:
+  region: "us-west-2"
+  cluster_name: "devops-automation-cluster"
+  node_instance_type: "t3.medium"
+  desired_capacity: 2
+  
+gcp:
+  project_id: "my-gcp-project"
+  region: "us-central1"
+  cluster_name: "devops-automation-cluster"
+  node_machine_type: "e2-medium"
+  
+azure:
+  resource_group: "devops-automation-rg"
+  location: "East US"
+  cluster_name: "devops-automation-cluster"
+  node_vm_size: "Standard_D2_v2"
+
+# Ingress configuration
+ingress:
+  enabled: true
+  domain: "preview.example.com"
+  tls_enabled: false
+  
+# Policy enforcement
+policies:
+  enabled: true
+  strict_mode: true  # Fail on any policy violation
+  
+# Auto-teardown configuration
+auto_teardown:
+  enabled: true
+  on_pr_close: true
+  on_pr_merge: true
