@@ -4,6 +4,45 @@ A production-inspired DevOps framework that automates CI/CD, enforces policy-as-
 
 This project is designed to mimic real-world DevOps challenges and solutions, making it easy to bootstrap secure, scalable, and cloud-agnostic pipelines for modern applications.
 
+## Quick Start
+
+### 1. Deploy an Ephemeral Environment
+```bash
+# Deploy to AWS
+python cli/deploy.py deploy --env-name pr-123 --provider aws
+
+# Deploy to GCP
+python cli/deploy.py deploy --env-name pr-123 --provider gcp
+
+# Deploy to Azure
+python cli/deploy.py deploy --env-name pr-123 --provider azure
+```
+
+### 2. Validate Kubernetes Manifests
+```bash
+python cli/deploy.py validate --manifest demo-app/kubernetes/deployment.yaml
+```
+
+### 3. List Active Environments
+```bash
+python cli/deploy.py list
+```
+
+### 4. Teardown Environment
+```bash
+python cli/deploy.py teardown --env-name pr-123
+```
+
+### 5. Run Demo Application Locally
+```bash
+cd demo-app/app
+pip install -r requirements.txt
+python app.py
+# Access at http://localhost:8080
+```
+
+For detailed usage instructions, see [docs/USAGE.md](docs/USAGE.md).
+
 ## Key Features
 ## 1. Ephemeral Environments (per Pull Request)
 - Spin up full Kubernetes namespaces for each PR (with DB + secrets).
